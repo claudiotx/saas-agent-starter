@@ -13,7 +13,7 @@ and verification checks—not conversation history.
 
 **Designed for small software products, SaaS MVPs, and bounded development projects.**
 
-> **Project status:** This template has not yet been tested on real projects.
+> **Project status:** 
 > It defines a development workflow; it does not guarantee implementation quality,
 > security, or production readiness.
 
