@@ -87,13 +87,14 @@ trivial single-line fix where writing the brief would cost more than the edit.
 ### Autonomy rules
 
 - **No questions to the user.** When something is unclear, decide using `mission.md`
-  principles, the cheapest reversible option, and the current docs. Record the decision in
-  `specs/progress.md` under "Decisions" with a one-line reason.
+  principles, the cheapest reversible option, and the current docs. If the decision
+  changes a requirement or technical choice, update the relevant spec file. Otherwise list it
+  (with a one-line reason) in the pull request description.
 - **Keep going until the roadmap is complete.** Do not stop to report, to ask for approval, or
   to wait. Finish a task, update the roadmap, start the next one.
 - **Stop only when:** every task is checked off (then open the PR), or a task is genuinely
-  impossible after two different approaches (then mark it `BLOCKED` in `specs/progress.md`
-  with the evidence, skip any task that depends on it, continue with the rest, and describe
+  impossible after two different approaches (then mark it `BLOCKED` under that task in
+  `specs/roadmap.md` with the evidence, skip any task that depends on it, continue with the rest, and describe
   the block in the PR).
 - Never skip, disable or weaken a failing test or check to get past it. Fix the cause.
 - Never run a hard-to-reverse command (force-push, `reset --hard`, deleting data, spending
@@ -113,8 +114,8 @@ trivial single-line fix where writing the brief would cost more than the edit.
    rounds on the same task, redesign the brief or split the task.
 5. **Commit** on the feature branch with a message naming the task. One task, one commit
    (or a small series).
-6. **Update the records:** tick the task in `specs/roadmap.md` and add a line to
-   `specs/progress.md` (task, commit, check results, decisions made).
+6. **Update the roadmap:** tick the task in `specs/roadmap.md` only after its "done when" is
+   verified. Note any partial progress or blocker under the task.
 7. Next task.
 
 ### Worker brief template
@@ -139,18 +140,38 @@ Rules: no TODOs, stubs or mocks for real functionality. Do not edit specs/ files
 1. Run the full check suite and the final verification table in `specs/tech-stack.md`.
 2. Run a whole-branch review: read the full diff against `mission.md`, every FR and NFR, and
    the anti-goals. Fix what you find.
-3. Make sure `specs/roadmap.md` and `specs/progress.md` are accurate, and that temp files and
+3. Make sure `specs/roadmap.md` and the other specs are accurate, and that temp files and
    debug artefacts are deleted.
 4. Push the branch and **open one pull request** to `main`. The description lists: what was
-   built per phase, how each must-have FR was verified, decisions and assumptions made,
-   blocked or skipped items, and how to run it. This is the only point where a human is
+   built per phase, how each must-have FR was verified (with the check results), decisions and
+   assumptions made, remaining limitations, blocked or skipped items, and how to run it. This is the only point where a human is
    involved.
 5. Stop.
 
 ### If you lose context
 
-Everything needed is on disk. Re-read `specs/mission.md`, `specs/roadmap.md` (ticked tasks are
-done), and `specs/progress.md`, check `git log`, and continue with the first unticked task.
+Everything needed is on disk. Re-read `specs/mission.md` and `specs/roadmap.md` (ticked tasks
+are done, blockers and partial progress are noted under their task), check `git log`, and
+continue with the first unticked task.
+
+## Progress and handoff
+
+`specs/roadmap.md` is the source of truth for execution status. There is no separate progress
+log.
+
+| Information | Source of truth |
+|---|---|
+| Task status, blockers, partial progress | `specs/roadmap.md` |
+| Requirements and technical decisions | The relevant `specs/` file |
+| Code changes | Git commits |
+| Verification results and remaining limitations | The pull request description |
+
+- Mark a task complete only after its completion criteria are verified.
+- Record blockers and partial progress under the relevant task.
+- Update the relevant spec when an implementation decision changes it.
+- Include verification results and remaining limitations in the pull request.
+- Before ending a session, leave enough context in the roadmap for another Manager to resume
+  without relying on conversation history.
 
 ---
 

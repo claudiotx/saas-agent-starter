@@ -29,7 +29,7 @@ Two stages. Separate sessions. One explicit handoff.
    Define scope and constraints              Execute the ordered roadmap
    Resolve dependencies                      Review each worker's output
    Establish acceptance criteria             Run verification checks
-   Assess implementation readiness           Record results and decisions
+   Assess implementation readiness           Record status in the roadmap
 
    → specs/ + validation.md READY       → One pull request for human review
 ```
@@ -45,8 +45,8 @@ as the source of truth, rather than relying on the planning conversation.
   `specs/validation.md` reports `Status: READY`.
 - **Separate execution from review.** Workers implement individual tasks.
   The Manager reviews their changes and verification results.
-- **Make decisions traceable.** Record implementation decisions and task results
-  in `specs/progress.md`.
+- **Make decisions traceable.** Task status lives in `specs/roadmap.md`, decisions in
+  the relevant spec, changes in Git, and verification results in the pull request.
 - **Keep human approval explicit.** You approve the specifications before
   implementation and review the pull request before merging.
 
@@ -121,8 +121,8 @@ reports Status: READY.
 Work through specs/roadmap.md in order. Brief worker subagents for implementation,
 review their changes yourself, and run the required verification checks.
 
-Make implementation decisions within the approved scope and record them in
-specs/progress.md. Do not claim a task is complete without evidence that its
+Make implementation decisions within the approved scope. Update the relevant spec
+when a decision changes it. Do not claim a task is complete without evidence that its
 completion criteria have been met.
 
 Work autonomously as defined in AGENTS.md. Open one pull request at the end,
@@ -135,7 +135,7 @@ The Manager:
 2. Delegates each roadmap task to a worker.
 3. Reviews the diff and verification results.
 4. Commits accepted work and marks completed tasks.
-5. Records results and decisions in `specs/progress.md`.
+5. Notes blockers and partial progress under the task in `specs/roadmap.md`.
 6. Opens one pull request for human review.
 
 The Manager operates without routine clarification questions during this stage.
@@ -153,7 +153,6 @@ Resolve product decisions during Stage 1 so implementation has a clear brief.
 | `specs/diagrams.md` | Mermaid diagrams describing system structure and flows. |
 | `specs/roadmap.md` | Ordered implementation phases and tasks with explicit completion criteria. |
 | `specs/validation.md` | Readiness assessment and the gate between planning and implementation. |
-| `specs/progress.md` | Implementation results and decision log. |
 
 ## Changing direction
 
