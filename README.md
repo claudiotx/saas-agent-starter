@@ -181,7 +181,6 @@ including subagents, file editing, command execution, Git, and pull-request crea
 
 ## Limitations
 
-- **Not yet field-tested.** Real-project reliability has not been established.
 - **Specification quality matters.** Missing constraints or weak acceptance criteria
   can produce an implementation that passes checks but misses the product need.
 - **Agent validation is fallible.** Feasibility assessments and dependency checks
