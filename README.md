@@ -1,85 +1,193 @@
-# AI Project Boilerplate
+# Spec-Driven AI Development
 
-A set of Markdown files that lets AI agents plan and build a project on their own. You describe
-the idea. One agent turns it into validated specs. A second agent then builds it, task by task,
-and opens a pull request at the end.
+**An AGENTS.md-based development template that takes a project from requirements to a reviewed pull request.**
 
-The `specs/` folder holds an **example project** (SignalDeck, a digital signage SaaS) so you can
-see what good specs look like. Step 1 replaces it with your own.
+Define the project before delegating the implementation.
 
-## How it works
+This template gives AI coding agents a structured workflow: clarify requirements, assess
+implementation readiness, then execute an ordered roadmap through manager–worker orchestration.
+
+The workflow separates planning from execution. Requirements are approved before coding
+begins. Implementation proceeds against written specifications, explicit completion criteria,
+and verification checks—not conversation history.
+
+**Designed for small software products, SaaS MVPs, and bounded development projects.**
+
+> **Project status:** This template has not yet been tested on real projects.
+> It defines a development workflow; it does not guarantee implementation quality,
+> security, or production readiness.
+
+## The method
+
+Two stages. Separate sessions. One explicit handoff.
 
 ```text
-Step 1  (new session)                     Step 2  (new session)
-You + Requirements Analyst agent   ──►    Manager agent + worker subagents
-  interview, write specs,                   read specs, work through roadmap.md,
-  validate they are achievable              review every result, open one PR
-  → specs/ + validation.md READY            → pull request to main
+1. Specify and validate                  2. Implement and review
+   You + Requirements Analyst               Manager + worker subagents
+
+   Clarify the product                       Read the approved specifications
+   Define scope and constraints              Execute the ordered roadmap
+   Resolve dependencies                      Review each worker's output
+   Establish acceptance criteria             Run verification checks
+   Assess implementation readiness           Record results and decisions
+
+   → specs/ + validation.md READY       → One pull request for human review
 ```
 
-The two steps run in **separate contexts**. Start a fresh session for Step 2. The Manager
-only trusts what is on disk.
+The second stage starts in a fresh session. The Manager treats the files on disk
+as the source of truth, rather than relying on the planning conversation.
 
-## Step 1: Write and validate the specs
+## Operating principles
 
-Start a new session in this repo and paste:
+- **Specify before implementing.** Define requirements, scope, dependencies, and
+  completion criteria before delegating coding.
+- **Gate execution on readiness.** The Manager does not start unless
+  `specs/validation.md` reports `Status: READY`.
+- **Separate execution from review.** Workers implement individual tasks.
+  The Manager reviews their changes and verification results.
+- **Make decisions traceable.** Record implementation decisions and task results
+  in `specs/progress.md`.
+- **Keep human approval explicit.** You approve the specifications before
+  implementation and review the pull request before merging.
+
+`READY` means the specifications meet the workflow's readiness criteria.
+It is not proof that every technical assumption is correct.
+
+## Quick start
+
+1. Copy this repository or use it as a GitHub template.
+2. Start a new agent session and run **Stage 1** below.
+3. Review and approve the resulting specifications.
+4. Start a fresh agent session and run **Stage 2**.
+5. Review the pull request before merging.
+
+The `specs/` directory contains a worked specification example:
+**SignalDeck**, a digital signage SaaS. Stage 1 replaces these files with
+specifications for your project.
+
+## Stage 1 — Specify and validate
+
+Start a new session in this repository and paste:
 
 ```text
 You are Agent 1, the Requirements Analyst and Validator, as defined in AGENTS.md.
-Read AGENTS.md and the files in specs/ (they are an example for a different project).
+
+Read AGENTS.md and the files in specs/. The existing specifications are an
+example for a different project.
+
 My project: <describe your idea in a few sentences>.
-Interview me, then rewrite the specs for my project. Validate that every requirement is
-clear and achievable, with no technical limits or missing dependencies, and write
-specs/validation.md. Ask me anything you need. Do not start building.
+
+Interview me, then rewrite the specifications for my project.
+
+Define scope, requirements, technical constraints, external dependencies,
+acceptance criteria, and an ordered implementation roadmap.
+
+Assess whether the project is ready for implementation. Identify unresolved
+questions, unsupported assumptions, feasibility risks, and missing dependencies.
+Write your findings in specs/validation.md.
+
+Ask me anything you need. Do not start building.
 ```
 
-To let the agent decide instead of asking, add: `Take assumptions where I don't know, and list them.`
+If you want the agent to propose defaults, add:
 
-Step 1 is done when `specs/validation.md` says `Status: READY` and its open-questions list is
-empty. Read it, and read `specs/mission.md`. You are signing off on those.
+```text
+Where I do not have a preference, propose a reasonable assumption and record it.
+Do not treat an unverified assumption as a verified fact.
+```
 
-## Step 2: Build it
+### Approval gate
 
-Start a **new** session and paste:
+Stage 1 is complete when:
+
+- `specs/validation.md` reports `Status: READY`.
+- Its open-questions list is empty.
+- You have reviewed the readiness report, mission, scope, and roadmap.
+- You accept the recorded assumptions and constraints.
+
+You are approving the implementation brief—not certifying that the generated
+specifications are error-free.
+
+## Stage 2 — Implement and review
+
+Start a **fresh session** and paste:
 
 ```text
 You are Agent 2, the Manager, as defined in AGENTS.md.
-Read AGENTS.md and everything in specs/, then work through specs/roadmap.md until it is
-complete. Brief worker subagents for the coding, review all their work yourself, and
-work fully autonomously. Open one pull request at the end.
+
+Read AGENTS.md and everything in specs/. Confirm that specs/validation.md
+reports Status: READY.
+
+Work through specs/roadmap.md in order. Brief worker subagents for implementation,
+review their changes yourself, and run the required verification checks.
+
+Make implementation decisions within the approved scope and record them in
+specs/progress.md. Do not claim a task is complete without evidence that its
+completion criteria have been met.
+
+Work autonomously as defined in AGENTS.md. Open one pull request at the end,
+summarizing the implementation, verification results, and any remaining limitations.
 ```
 
-The Manager creates a feature branch, runs each roadmap task through a worker, reviews the diff
-and the checks, commits, ticks the roadmap, and moves on. It makes its own decisions and
-logs them in `specs/progress.md`. It does not ask you anything.
+The Manager:
 
-## What is in this repo
+1. Creates a feature branch.
+2. Delegates each roadmap task to a worker.
+3. Reviews the diff and verification results.
+4. Commits accepted work and marks completed tasks.
+5. Records results and decisions in `specs/progress.md`.
+6. Opens one pull request for human review.
 
-| File | Purpose |
+The Manager operates without routine clarification questions during this stage.
+Resolve product decisions during Stage 1 so implementation has a clear brief.
+
+## Repository structure
+
+| File | Responsibility |
 |---|---|
-| `AGENTS.md` | The rules for Agent 1, the Manager and the workers. |
-| `CLAUDE.md` | Points Claude Code at `AGENTS.md`. |
-| `specs/mission.md` | What and why, principles, FRs and NFRs, scope, non-goals. |
-| `specs/tech-stack.md` | Decided stack, repo layout, commands, verification table. |
-| `specs/data-sources.md` | External dependencies: services, keys, assets, owners. |
-| `specs/diagrams.md` | Mermaid diagrams of the system and flows. |
-| `specs/roadmap.md` | Ordered phases and tasks, each with a "done when". |
-| `specs/validation.md` | Step 1's readiness report. The Manager refuses to start without `READY`. |
-| `specs/progress.md` | The Manager's log: task results and decisions. |
+| `AGENTS.md` | Roles, operating rules, and handoffs for the Analyst, Manager, and workers. |
+| `CLAUDE.md` | Directs Claude Code to `AGENTS.md`. |
+| `specs/mission.md` | Product purpose, principles, functional and non-functional requirements, scope, and non-goals. |
+| `specs/tech-stack.md` | Selected stack, repository layout, commands, and verification table. |
+| `specs/data-sources.md` | External services, credentials, assets, dependencies, and owners. |
+| `specs/diagrams.md` | Mermaid diagrams describing system structure and flows. |
+| `specs/roadmap.md` | Ordered implementation phases and tasks with explicit completion criteria. |
+| `specs/validation.md` | Readiness assessment and the gate between planning and implementation. |
+| `specs/progress.md` | Implementation results and decision log. |
 
-## Using it for your project
+## Changing direction
 
-1. Copy or clone this repo as the start of your project.
-2. Run Step 1, then Step 2.
-3. Review and merge the pull request.
+For a small change, update the affected specifications and roadmap.
 
-To change direction later, edit the specs (or rerun Step 1 for a bigger change), then rerun Step 2.
-The Manager continues from the first unticked roadmap task.
+For a material change in scope or architecture, rerun Stage 1 and review the
+updated readiness assessment before resuming implementation.
 
-## Limits
+The Manager resumes from the first unchecked roadmap task. If a change invalidates
+previously completed work, update the roadmap to include the required rework.
 
-- The agents are only as good as the specs. A vague mission gives vague results, which is why
-  Step 1 is strict.
-- Full autonomy means you review at the end. Keep the roadmap tasks small and the checks real,
-  so the pull request is reviewable.
-- This boilerplate is untested on real projects so far.
+## What this template is—and is not
+
+This is a **Markdown-first workflow template for AI-assisted development**.
+
+It is not:
+
+- A prebuilt SaaS application.
+- An agent runtime or orchestration framework.
+- A replacement for engineering judgment or human review.
+- A guarantee of secure, correct, or production-ready software.
+
+Your agent environment must support the operations required by the workflow,
+including subagents, file editing, command execution, Git, and pull-request creation.
+
+## Limitations
+
+- **Not yet field-tested.** Real-project reliability has not been established.
+- **Specification quality matters.** Missing constraints or weak acceptance criteria
+  can produce an implementation that passes checks but misses the product need.
+- **Agent validation is fallible.** Feasibility assessments and dependency checks
+  may require independent verification.
+- **Autonomy needs boundaries.** Keep scope bounded, tasks small, and verification
+  checks meaningful.
+- **Review remains necessary.** Review the specifications before execution and the
+  implementation before merging. Apply additional security and deployment checks
+  appropriate to your project.
